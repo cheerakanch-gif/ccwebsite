@@ -215,12 +215,12 @@
      mix-blend-mode:screen with a red fill: dark text turns translucent red,
      while the light background stays (almost) unchanged. */
   /* scroll progress: a slim track on the right with a tiny bush riding along it */
-  .scrollbar{position:fixed;right:max(18px,env(safe-area-inset-right,0px));top:140px;bottom:110px;width:4px;border-radius:4px;background:rgba(122,74,46,.14);z-index:30;cursor:pointer}
+  .scrollbar{position:fixed;left:max(18px,env(safe-area-inset-left,0px));top:140px;bottom:110px;width:4px;border-radius:4px;background:rgba(122,74,46,.14);z-index:30;cursor:pointer}
   .scrollbar::before{content:"";position:absolute;inset:0 -12px}   /* wider invisible area, easier to click */
   .sb-fill{position:absolute;left:0;top:0;width:100%;height:0;border-radius:4px;background:linear-gradient(#b07a4a,#7a4a2e)}
   .sb-bush{position:absolute;left:50%;top:0;width:34px;height:29px;transform:translate(-50%,-50%);transform-origin:50% 90%;filter:drop-shadow(0 3px 4px rgba(30,110,60,.25));transition:transform .2s;cursor:grab;touch-action:none}
   .scrollbar.grab .sb-bush{cursor:grabbing;transform:translate(-50%,-50%) scale(1.2)!important}
-  @media (max-width:560px){.scrollbar{right:8px;width:3px;top:150px;bottom:120px}.sb-bush{width:26px;height:22px}}
+  @media (max-width:560px){.scrollbar{left:8px;width:3px;top:150px;bottom:120px}.sb-bush{width:26px;height:22px}}
   #dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999}
   .lens,.ring{position:fixed;left:0;top:0;pointer-events:none;opacity:0;transition:width .25s,height .25s,margin .25s,opacity .25s}
   .lens{width:22px;height:22px;margin:-11px 0 0 -11px}
