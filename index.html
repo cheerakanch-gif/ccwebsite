@@ -829,13 +829,15 @@ Competitions: ITMX Hackathon 2025 (National Interbank Transaction Management and
 Projects, hobbies and other resume details are not published yet.`;
 
   const RULES = `You are Bunny, a friendly little white bunny who is the AI assistant on the personal website of Cheerakan "ioun" Changam. Visitors (recruiters, classmates, collaborators) chat with you to learn about ioun.
-Answer ONLY from the profile below. If something isn't in it (projects, grades, experience, opinions, private life), say you don't know yet and suggest emailing ioun. Never invent facts. Refer to ioun by name or as "they/them".
+Answer ONLY from the profile below. If something isn't in it (projects, grades, experience, opinions, private life), say you don't know yet and suggest emailing ioun. Never invent facts. Refer to ioun by name or as "she/her".
 Keep replies short: 1-3 sentences, warm and a little playful (an occasional 🐰 or 🥕 is fine), plain text, no markdown. Reply in the visitor's language (e.g. Thai if they write Thai).
 If asked to do unrelated tasks, gently steer back to ioun.
 
 PROFILE:
 ${PROFILE}`;
 
+  // fixed answer for the "What does ioun study?" question, used whether or not Claude is available
+  const STUDY_ANSWER = "She is studying Economics at Thammasat University, with a minor in Finance at Thammasat Business School. 🐰 She loves figuring out how the world works and how it could work better!";
   // offline answers, used when Claude isn't available (e.g. the site hosted outside claude.ai)
   function offline(q) {
     q = q.toLowerCase();
@@ -845,7 +847,7 @@ ${PROFILE}`;
     if (has("intern", "hire", "job", "work with", "collab", "available", "ฝึกงาน"))
       return "Yes! ioun is open to internships and collaborations. The best way to start is an email to cheerakancha.work@gmail.com.";
     if (has("study", "studies", "major", "university", "school", "thammasat", "economics", "degree", "เรียน", "ธรรมศาสตร์"))
-      return "ioun studies Economics at Thammasat University. They love figuring out how the world works and how it could work better.";
+      return STUDY_ANSWER;
     if (has("experience", "intern at", "worked", "job history", "soberin", "research assistant"))
       return "ioun has worked as a Research Assistant at the Thammasat University Research and Consultancy Institute, and as a Business Strategy & AI Transformation Analyst at Soberin (Jun–Jul 2026), both in Bangkok. 🐰";
     if (has("club", "podcast", "setthasarn", "newsletter", "llm", "involve", "activit", "extracurricular"))
@@ -1106,6 +1108,14 @@ ${PROFILE}`;
     turns.push({ role: "user", content: text });
     if (turns.length > 12) turns.splice(0, turns.length - 12);
     while (turns[0] && turns[0].role !== "user") turns.shift();
+    if (/^what does ioun study\??$/i.test(text)) {          // the suggested question always gets ioun's own answer
+      const out = bubble("Bunny is thinking…", "bot", true);
+      await new Promise(r => setTimeout(r, 450));
+      out.classList.remove("wait"); out.textContent = STUDY_ANSWER;
+      turns.push({ role: "assistant", content: STUDY_ANSWER });
+      log.scrollTop = log.scrollHeight; busy = false; send.disabled = false; input.focus();
+      return;
+    }
     const out = bubble("Bunny is thinking…", "bot", true);
     if (sample && live) {
       ctl = new AbortController();
